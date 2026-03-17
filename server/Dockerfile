@@ -1,0 +1,1 @@
+FROM ghcr.io/immich-app/immich-server:release
