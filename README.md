@@ -1,6 +1,6 @@
 # Deploy and Host Immich on Railway
 
-[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template?template=https://github.com/c-treinta/railway-immich)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template/immich)
 
 Immich is an open-source, self-hosted photo and video backup solution. It provides a Google Photos-like experience with automatic mobile backup, facial recognition, object detection, and album sharing — all running on your own infrastructure.
 
