@@ -1,32 +1,45 @@
-# Immich
+# Deploy and Host Immich on Railway
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/c-treinta/railway-immich)
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template?template=https://github.com/c-treinta/railway-immich)
 
-Self-hosted Google Photos alternative.
+Immich is an open-source, self-hosted photo and video backup solution. It provides a Google Photos-like experience with automatic mobile backup, facial recognition, object detection, and album sharing — all running on your own infrastructure.
 
-**Services:** `immich-server`, `immich-ml`, `Postgres`, `Redis` (Railway-managed)
-**Volumes:**
-- `immich-server`: `/usr/src/app/upload` (photos and thumbnails)
-- `immich-ml`: `/cache` (ML model cache)
+## About Hosting Immich
 
-## Deploy
+Hosting Immich on Railway gives you a fully managed environment for your personal media library without maintaining servers. Railway handles infrastructure provisioning, networking, and persistent storage so you can focus on using Immich rather than running it. The template wires together the Immich server, the machine-learning sidecar (for smart search and facial recognition), a PostgreSQL database, and a Redis cache — all on Railway's private network. Volumes are attached automatically so your photos, thumbnails, and ML model cache survive restarts and redeployments.
 
-```bash
-make deploy
-```
+## Common Use Cases
 
-## Post-Deploy
+- Personal photo and video backup from iOS and Android devices
+- Self-hosted alternative to Google Photos or iCloud with full data ownership
+- Shared family photo library with multi-user support and album sharing
+- AI-powered smart search and face grouping across large media collections
+- Secure, private media archive with no third-party cloud dependency
 
-1. Open the Railway domain for `immich-server`
-2. Create your admin account on first visit
-3. Install the Immich mobile app and point it at your Railway domain
+## Dependencies for Immich Hosting
 
-## Environment Variables (auto-wired)
+- PostgreSQL (pgvecto.rs extension required — use the Immich-compatible image)
+- Redis (Railway-managed)
+- Immich server service (`ghcr.io/immich-app/immich-server:release`)
+- Immich machine-learning service (`ghcr.io/immich-app/immich-machine-learning:release`)
 
-| Variable | Service |
-|----------|---------|
-| `DATABASE_URL` | immich-server |
-| `REDIS_HOSTNAME` / `REDIS_PORT` | immich-server |
-| `UPLOAD_LOCATION` | immich-server |
-| `IMMICH_MACHINE_LEARNING_URL` | immich-server (private network) |
-| `MACHINE_LEARNING_CACHE_FOLDER` | immich-ml |
+### Deployment Dependencies
+
+- [Immich Docker images on GHCR](https://github.com/immich-app/immich/pkgs/container/immich-server)
+- [Immich official documentation](https://immich.app/docs)
+- [Immich GitHub repository](https://github.com/immich-app/immich)
+
+### Implementation Details
+
+The template uses two custom Dockerfiles that pull the official Immich release images:
+
+- `server/Dockerfile` → `ghcr.io/immich-app/immich-server:release`
+- `ml/Dockerfile` → `ghcr.io/immich-app/immich-machine-learning:release`
+
+Service-to-service communication (server → ML sidecar) uses Railway's private network via `${{immich-ml.RAILWAY_PRIVATE_DOMAIN}}` so traffic never leaves the internal network. Volumes are mounted at `/usr/src/app/upload` (photos) and `/cache` (ML models).
+
+## Why Deploy Immich on Railway?
+
+Railway is a singular platform to deploy your infrastructure stack. Railway will host your infrastructure so you don't have to deal with configuration, while allowing you to vertically and horizontally scale it.
+
+By deploying Immich on Railway, you are one step closer to supporting a complete full-stack application with minimal burden. Host your servers, databases, AI agents, and more on Railway.
